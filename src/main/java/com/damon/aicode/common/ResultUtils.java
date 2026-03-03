@@ -4,6 +4,7 @@ import com.damon.aicode.exception.ErrorCode;
 
 /**
  * @author yangjialin
+ * 统一返回结果工具类
  */
 public class ResultUtils {
 

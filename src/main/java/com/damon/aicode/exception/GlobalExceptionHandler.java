@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * @author yangjialin
- * 全局异常处理器
+ * 全局异常处理器，捕获接口中所有的异常
  */
 @Hidden
 @RestControllerAdvice

@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * @author yangjialin
+ * 通用响应类
  */
 @Data
 public class BaseResponse<T> implements Serializable {

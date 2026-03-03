@@ -24,4 +24,4 @@ knife4j:
 # 日志级别
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: INFO
