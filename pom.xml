@@ -54,15 +54,23 @@
       <artifactId>mybatis-flex-spring-boot3-starter</artifactId>
       <version>1.11.6</version>
     </dependency>
+    <!-- 代码生成模块 -->
+    <dependency>
+      <groupId>com.mybatis-flex</groupId>
+      <artifactId>mybatis-flex-codegen</artifactId>
+      <version>1.11.0</version>
+    </dependency>
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!-- Source: https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
     <dependency>
       <groupId>cn.hutool</groupId>
-      <artifactId>hutool-ai</artifactId>
-      <version>5.8.38</version>
+      <artifactId>hutool-all</artifactId>
+      <version>5.8.43</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.github.xiaoymin</groupId>
