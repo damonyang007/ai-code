@@ -112,6 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>  implements U
       throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
     }
     // 3. 用 Sa-Token 建立登录状态
+    StpUtil.logout(user.getId());
     StpUtil.login(user.getId());
     // 4. 获得脱敏后的用户信息
     return this.getLoginUserVO(user);
