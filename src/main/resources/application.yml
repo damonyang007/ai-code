@@ -6,6 +6,13 @@ spring:
     url: jdbc:mysql://192.168.31.8:13306/ai-code
     username: root
     password: pass@word1
+  data:
+    redis:
+      database: 0
+      host: 192.168.31.8
+      port: 6379
+      timeout: 10000
+      connect-timeout: 10000
 server:
   port: 8123
   # 上下文路径

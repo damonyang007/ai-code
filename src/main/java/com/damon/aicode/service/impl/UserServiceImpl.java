@@ -1,8 +1,6 @@
 package com.damon.aicode.service.impl;
 
-import static com.damon.aicode.constant.UserConstant.USER_LOGIN_STATE;
-
-import cn.hutool.core.bean.BeanUtil;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.damon.aicode.exception.BusinessException;
 import com.damon.aicode.exception.ErrorCode;
@@ -113,8 +111,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>  implements U
     if (user == null) {
       throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
     }
-    // 3. 记录用户的登录态
-    request.getSession().setAttribute(USER_LOGIN_STATE, user);
+    // 3. 用 Sa-Token 建立登录状态
+    StpUtil.login(user.getId());
     // 4. 获得脱敏后的用户信息
     return this.getLoginUserVO(user);
   }
@@ -122,16 +120,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>  implements U
   @Override
   public User getLoginUser(HttpServletRequest request) {
     // 先判断是否已登录
-    Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-    User currentUser = (User) userObj;
-    if (currentUser == null || currentUser.getId() == null) {
-      throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
-    }
-    // 从数据库中查询当前登录的用户
-    long userId = currentUser.getId();
-    currentUser = this.getById(userId);
+    StpUtil.checkLogin();
+    long userId = StpUtil.getLoginIdAsLong();
+    User currentUser = this.getById(userId);
     if (currentUser == null) {
-      throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
     }
     return currentUser;
   }
@@ -139,12 +132,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>  implements U
   @Override
   public boolean userLogout(HttpServletRequest request) {
     // 判断是否已登录
-    Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-    if (userObj == null) {
-      throw new BusinessException(ErrorCode.OPERATION_ERROR, "用户未登录");
-    }
-    // 移除登录状态
-    request.getSession().removeAttribute(USER_LOGIN_STATE);
+    StpUtil.checkLogin();
+    StpUtil.logout();
     return true;
   }
 }
