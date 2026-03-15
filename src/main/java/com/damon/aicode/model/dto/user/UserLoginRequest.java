@@ -1,13 +1,13 @@
-package com.damon.aicode.model.dto;
+package com.damon.aicode.model.dto.user;
 
 import java.io.Serializable;
 import lombok.Data;
 
 /**
- * 用户注册请求体
+ * 用户登录请求体
  */
 @Data
-public class UserRegisterRequest implements Serializable {
+public class UserLoginRequest implements Serializable {
 
     private static final long serialVersionUID = 3191241716373120793L;
 
@@ -20,9 +20,4 @@ public class UserRegisterRequest implements Serializable {
      * 密码
      */
     private String userPassword;
-
-    /**
-     * 确认密码
-     */
-    private String checkPassword;
 }

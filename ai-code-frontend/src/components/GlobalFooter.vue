@@ -1,18 +1,5 @@
 <template>
-  <a-layout-footer class="footer">
-    <div class="footer-content">
-      <p class="copyright">
-        <a
-          href="https://www.codefather.cn"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="author-link"
-        >
-          编程导航原创项目 by 程序员
-        </a>
-      </p>
-    </div>
-  </a-layout-footer>
+
 </template>
 
 <script setup lang="ts">
