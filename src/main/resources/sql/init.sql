@@ -21,6 +21,10 @@ create table if not exists user
     createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     isDelete     tinyint      default 0                 not null comment '是否删除',
+    deleteType   varchar(32)                           null comment '删除类型：self/admin',
+    deleteRequestedAt datetime                         null comment '发起删除时间',
+    deleteExpireAt datetime                            null comment '删除过期时间',
     UNIQUE KEY uk_userAccount (userAccount),
-    INDEX idx_userName (userName)
+    INDEX idx_userName (userName),
+    INDEX idx_deleteExpireAt (deleteType, deleteExpireAt)
 ) comment '用户' collate = utf8mb4_unicode_ci;

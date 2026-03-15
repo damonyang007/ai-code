@@ -97,4 +97,22 @@ public class User implements Serializable {
     @Column(value = "isDelete", isLogicDelete = true)
     private Integer isDelete;
 
+    /**
+     * delete type: self/admin
+     */
+    @Column("deleteType")
+    private String deleteType;
+
+    /**
+     * deletion requested at
+     */
+    @Column("deleteRequestedAt")
+    private LocalDateTime deleteRequestedAt;
+
+    /**
+     * self-delete grace period expiry
+     */
+    @Column("deleteExpireAt")
+    private LocalDateTime deleteExpireAt;
+
 }

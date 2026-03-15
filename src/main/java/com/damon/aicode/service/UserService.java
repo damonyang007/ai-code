@@ -81,6 +81,29 @@ public interface UserService extends IService<User> {
   boolean userLogout(HttpServletRequest request);
 
   /**
+   * Current user requests account deletion.
+   *
+   * @param request request
+   * @return success
+   */
+  boolean deleteMyAccount(HttpServletRequest request);
+
+  /**
+   * Mark a user as logically deleted by admin.
+   *
+   * @param userId user id
+   * @return success
+   */
+  boolean markDeletedByAdmin(Long userId);
+
+  /**
+   * Physically delete expired self-deleted users.
+   *
+   * @return deleted row count
+   */
+  long purgeExpiredSelfDeletedUsers();
+
+  /**
    * 根据查询条件构造数据查询参数
    * @param userQueryRequest 查询条件
    * @return 数据查询参数

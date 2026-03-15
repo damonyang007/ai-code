@@ -63,7 +63,7 @@ public class UserController {
     @SaCheckRole(UserConstant.ADMIN_ROLE)
     @DeleteMapping("remove/{id}")
     public boolean remove(@PathVariable Long id) {
-        return userService.removeById(id);
+        return userService.markDeletedByAdmin(id);
     }
 
     /**
@@ -164,11 +164,21 @@ public class UserController {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean b = userService.removeById(deleteRequest.getId());
+        boolean b = userService.markDeletedByAdmin(deleteRequest.getId());
         if (!b) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "删除失败，可能原因：用户不存在或已被删除");
         }
         return ResultUtils.success(b);
+    }
+
+    /**
+     * 用户主动删除自己的账号
+     */
+    @PostMapping("/delete/my")
+    @SaCheckLogin
+    public BaseResponse<Boolean> deleteMyAccount(HttpServletRequest request) {
+        ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
+        return ResultUtils.success(userService.deleteMyAccount(request));
     }
 
     /**
