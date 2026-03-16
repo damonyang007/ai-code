@@ -1,12 +1,14 @@
 package com.damon.aicode.model.enums;
 
 import cn.hutool.core.util.ObjUtil;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * @author yangjialin
  */
 @Getter
+@AllArgsConstructor
 public enum UserRoleEnum {
 
   USER("用户", "user"),
@@ -15,11 +17,6 @@ public enum UserRoleEnum {
   private final String text;
 
   private final String value;
-
-  UserRoleEnum(String text, String value) {
-    this.text = text;
-    this.value = value;
-  }
 
   /**
    * 根据 value 获取枚举
