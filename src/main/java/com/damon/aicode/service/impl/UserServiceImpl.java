@@ -7,6 +7,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.damon.aicode.exception.BusinessException;
 import com.damon.aicode.exception.ErrorCode;
 import com.damon.aicode.model.dto.user.UserQueryRequest;
+import com.damon.aicode.model.dto.user.UserUpdateMyRequest;
 import com.damon.aicode.model.enums.UserDeleteTypeEnum;
 import com.damon.aicode.model.enums.UserRoleEnum;
 import com.damon.aicode.model.vo.LoginUserVO;
@@ -199,6 +200,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>  implements U
       throw new BusinessException(ErrorCode.OPERATION_ERROR, "账号删除失败");
     }
     StpUtil.logout();
+    return true;
+  }
+
+  @Override
+  public boolean updateMyUser(UserUpdateMyRequest userUpdateMyRequest, HttpServletRequest request) {
+    if (userUpdateMyRequest == null) {
+      throw new BusinessException(ErrorCode.PARAMS_ERROR);
+    }
+    User currentUser = getLoginUser(request);
+    User updateUser = new User();
+    updateUser.setId(currentUser.getId());
+    updateUser.setUserName(userUpdateMyRequest.getUserName());
+    updateUser.setUserAvatar(userUpdateMyRequest.getUserAvatar());
+    updateUser.setUserProfile(userUpdateMyRequest.getUserProfile());
+    boolean result = this.updateById(updateUser);
+    if (!result) {
+      throw new BusinessException(ErrorCode.OPERATION_ERROR);
+    }
     return true;
   }
 

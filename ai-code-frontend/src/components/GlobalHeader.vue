@@ -1,16 +1,14 @@
 <template>
   <a-layout-header class="header">
     <a-row :wrap="false">
-      <!-- 左侧：Logo和标题 -->
-      <a-col flex="200px">
+      <a-col flex="220px">
         <RouterLink to="/">
           <div class="header-left">
             <img class="logo" src="@/assets/logo.png" alt="Logo" />
-            <h1 class="site-title">  应用生成</h1>
+            <h1 class="site-title">应用生成</h1>
           </div>
         </RouterLink>
       </a-col>
-      <!-- 中间：导航菜单 -->
       <a-col flex="auto">
         <a-menu
           v-model:selectedKeys="selectedKeys"
@@ -19,7 +17,6 @@
           @click="handleMenuClick"
         />
       </a-col>
-      <!-- 右侧：用户操作区域 -->
       <a-col>
         <div class="user-login-status">
           <div v-if="loginUserStore.loginUser.id">
@@ -30,6 +27,10 @@
               </a-space>
               <template #overlay>
                 <a-menu>
+                  <a-menu-item @click="goToUserProfile">
+                    <SettingOutlined />
+                    个人中心 / 个人设置
+                  </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录
@@ -39,7 +40,7 @@
             </a-dropdown>
           </div>
           <div v-else>
-            <a-button type="primary" href="/user/login">登录</a-button>
+            <a-button type="primary" @click="router.push('/user/login')">登录</a-button>
           </div>
         </div>
       </a-col>
@@ -48,76 +49,68 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, h, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { type MenuProps, message } from 'ant-design-vue'
-import { useLoginUserStore } from '@/stores/loginUser.ts'
-import { userLogout } from '@/api/userController.ts'
-import { LogoutOutlined, HomeOutlined } from '@ant-design/icons-vue'
+import { routes } from '@/router'
+import { useLoginUserStore } from '@/stores/loginUser'
+import { userLogout } from '@/api/userController'
+import { filterMenuRoutes } from '@/access/filterMenuRoutes'
+import {
+  AppstoreOutlined,
+  CommentOutlined,
+  HomeOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+  TeamOutlined,
+} from '@ant-design/icons-vue'
 
 const loginUserStore = useLoginUserStore()
 const router = useRouter()
-// 当前选中菜单
+const route = useRoute()
+
 const selectedKeys = ref<string[]>(['/'])
-// 监听路由变化，更新当前选中菜单
-router.afterEach((to, from, next) => {
-  selectedKeys.value = [to.path]
-})
 
-// 菜单配置项
-const originItems = [
-  {
-    key: '/',
-    icon: () => h(HomeOutlined),
-    label: '主页',
-    title: '主页',
-  },
-  {
-    key: '/admin/userManage',
-    label: '用户管理',
-    title: '用户管理',
-  },
-  {
-    key: '/admin/appManage',
-    label: '应用管理',
-    title: '应用管理',
-  },
-]
-
-// 过滤菜单项
-const filterMenus = (menus = [] as MenuProps['items']) => {
-  return menus?.filter((menu) => {
-    const menuKey = menu?.key as string
-    if (menuKey?.startsWith('/admin')) {
-      const loginUser = loginUserStore.loginUser
-      if (!loginUser || loginUser.userRole !== 'admin') {
-        return false
-      }
-    }
-    return true
-  })
+const menuIconMap: Record<string, () => ReturnType<typeof h>> = {
+  '/': () => h(HomeOutlined),
+  '/admin/userManage': () => h(TeamOutlined),
+  '/admin/appManage': () => h(AppstoreOutlined),
+  '/admin/chatManage': () => h(CommentOutlined),
 }
 
-// 展示在菜单的路由数组
-const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
+watch(
+  () => route.path,
+  (path) => {
+    selectedKeys.value = [path]
+  },
+  { immediate: true },
+)
 
-// 处理菜单点击
+const menuItems = computed<MenuProps['items']>(() => {
+  return filterMenuRoutes(routes, loginUserStore.loginUser).map((routeItem) => ({
+    key: routeItem.path,
+    label: (routeItem.meta?.title as string) ?? String(routeItem.name ?? routeItem.path),
+    title: (routeItem.meta?.title as string) ?? String(routeItem.name ?? routeItem.path),
+    icon: menuIconMap[routeItem.path],
+  }))
+})
+
 const handleMenuClick: MenuProps['onClick'] = (e) => {
   const key = e.key as string
   selectedKeys.value = [key]
-  // 跳转到对应页面
   if (key.startsWith('/')) {
     router.push(key)
   }
 }
 
-// 退出登录
+const goToUserProfile = async () => {
+  await router.push('/user/profile')
+}
+
 const doLogout = async () => {
   const res = await userLogout()
   if (res.data.code === 0) {
-    loginUserStore.setLoginUser({
-      userName: '未登录',
-    })
+    loginUserStore.setLoginUser(loginUserStore.createAnonymousUser())
     message.success('退出登录成功')
     await router.push('/user/login')
   } else {
@@ -151,5 +144,11 @@ const doLogout = async () => {
 
 .ant-menu-horizontal {
   border-bottom: none !important;
+}
+
+.user-login-status {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 </style>

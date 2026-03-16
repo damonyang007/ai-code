@@ -7,7 +7,7 @@ import router from './router'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
 
-import '@/access'
+import '@/access/index'
 
 const app = createApp(App)
 

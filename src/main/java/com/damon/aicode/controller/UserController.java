@@ -182,6 +182,18 @@ public class UserController {
     }
 
     /**
+     * 当前登录用户更新个人资料
+     */
+    @PostMapping("/update/my")
+    @SaCheckLogin
+    public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
+                                              HttpServletRequest request) {
+        ThrowUtils.throwIf(userUpdateMyRequest == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
+        return ResultUtils.success(userService.updateMyUser(userUpdateMyRequest, request));
+    }
+
+    /**
      * 更新用户
      */
     @PostMapping("/update")

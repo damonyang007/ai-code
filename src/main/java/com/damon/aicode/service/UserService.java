@@ -1,6 +1,7 @@
 package com.damon.aicode.service;
 
 import com.damon.aicode.model.dto.user.UserQueryRequest;
+import com.damon.aicode.model.dto.user.UserUpdateMyRequest;
 import com.damon.aicode.model.vo.LoginUserVO;
 import com.damon.aicode.model.vo.UserVO;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -87,6 +88,15 @@ public interface UserService extends IService<User> {
    * @return success
    */
   boolean deleteMyAccount(HttpServletRequest request);
+
+  /**
+   * Update current user's profile fields.
+   *
+   * @param userUpdateMyRequest self update request
+   * @param request http request
+   * @return success
+   */
+  boolean updateMyUser(UserUpdateMyRequest userUpdateMyRequest, HttpServletRequest request);
 
   /**
    * Mark a user as logically deleted by admin.

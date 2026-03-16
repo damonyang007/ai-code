@@ -29,7 +29,7 @@
 import { reactive } from 'vue'
 import { userLogin } from '@/api/userController.ts'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 
 const formState = reactive<API.UserLoginRequest>({
@@ -38,6 +38,7 @@ const formState = reactive<API.UserLoginRequest>({
 })
 
 const router = useRouter()
+const route = useRoute()
 const loginUserStore = useLoginUserStore()
 
 /**
@@ -50,12 +51,18 @@ const handleSubmit = async (values: any) => {
   if (res.data.code === 0 && res.data.data) {
     await loginUserStore.fetchLoginUser()
     message.success('登录成功')
+    const redirect = route.query.redirect
+    const redirectTarget = typeof redirect === 'string' ? redirect : '/'
+    if (redirectTarget.startsWith('http')) {
+      window.location.href = redirectTarget
+      return
+    }
     router.push({
-      path: '/',
+      path: redirectTarget || '/',
       replace: true,
     })
   } else {
-    message.error('登录失败，' + res.data.message)
+    message.error('登录失败：' + res.data.message)
   }
 }
 </script>
