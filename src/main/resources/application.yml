@@ -66,3 +66,16 @@ sa-token:
 logging:
   level:
     org.springframework: INFO
+# Actuator 配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+      base-path: /api/actuator  # 与 server.servlet.context-path 保持一致
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
