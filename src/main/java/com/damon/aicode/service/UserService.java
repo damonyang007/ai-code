@@ -1,5 +1,6 @@
 package com.damon.aicode.service;
 
+import com.damon.aicode.model.App;
 import com.damon.aicode.model.dto.user.UserQueryRequest;
 import com.damon.aicode.model.dto.user.UserUpdateMyRequest;
 import com.damon.aicode.model.vo.LoginUserVO;
@@ -119,4 +120,14 @@ public interface UserService extends IService<User> {
    * @return 数据查询参数
    */
   QueryWrapper getQueryWrapper(UserQueryRequest userQueryRequest);
+
+    /**
+     * 应用 服务层。
+     *
+     * @author yangjialin
+     * @since 2026-03-22
+     */
+    interface AppService extends IService<App> {
+
+    }
 }
